@@ -8,9 +8,8 @@ class LoadingError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      child: const Padding(
+    return ListView(children: const [
+      Padding(
         padding: EdgeInsets.all(16.0),
         child: Text(
           'Failed to Load Data',
@@ -18,6 +17,6 @@ class LoadingError extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
       ),
-    );
+    ]);
   }
 }

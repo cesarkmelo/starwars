@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => VehicleProvider()),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'People',
         theme: ThemeData(
           primarySwatch: Pallete.starwarspallete,

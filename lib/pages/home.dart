@@ -31,6 +31,12 @@ class _HomePageState extends State<HomePage> {
     return _payload;
   }
 
+  Future<void> _refreshPeople() async {
+    setState(() {
+      _future = _getPeople(1);
+    });
+  }
+
   @override
   void initState() {
     _future = _getPeople(_page);
@@ -77,7 +83,8 @@ class _HomePageState extends State<HomePage> {
               separatorBuilder: (_, int index) => const ListDivider(),
             );
           } else if (snapshot.hasError) {
-            return const LoadingError();
+            return RefreshIndicator(
+                child: const LoadingError(), onRefresh: () => _refreshPeople());
           } else {
             return const LoadingMore();
           }
