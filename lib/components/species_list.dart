@@ -20,10 +20,14 @@ class SpeciesList extends StatelessWidget {
 
         List<Widget> speciesWidgets = [];
         for (String url in speciesUrls) {
-          final Specie? specie = speciesProvider.species.firstWhere(
-            (s) => s.url == url,
-            orElse: () => null,
-          );
+          Specie? specie;
+          try {
+            specie = speciesProvider.species.firstWhere(
+              (s) => s.url == url,
+            );
+          } on StateError {
+            specie = null; // Element not found
+          }
 
           if (specie != null) {
             speciesWidgets.add(

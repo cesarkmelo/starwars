@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:starwars/models/planet.dart'; // Import Planet model
+import 'package:starwars/models/planet.dart';
 import 'package:starwars/provider/planet_provider.dart';
 import '../constants.dart';
-import 'list_divider.dart'; // For consistency, though might not be needed if it's a single item
+import 'list_divider.dart';
 
 class HomeworldDetailView extends StatelessWidget {
-  final String homeworldUrl; // This is a URL
+  final String homeworldUrl;
 
   const HomeworldDetailView({Key? key, required this.homeworldUrl}) : super(key: key);
 
@@ -18,26 +18,30 @@ class HomeworldDetailView extends StatelessWidget {
           return const SizedBox.shrink();
         }
 
-        final Planet? homeworld = planetProvider.planets.firstWhere(
-          (p) => p.url == homeworldUrl,
-          orElse: () => null,
-        );
+        Planet? homeworld;
+        try {
+          homeworld = planetProvider.planets.firstWhere(
+            (p) => p.url == homeworldUrl,
+          );
+        } on StateError {
+          // Element not found, homeworld remains null
+          homeworld = null;
+        }
 
         if (homeworld != null) {
-          return Column( // Wrap in Column for ListDivider if needed, or just ListTile
+          return Column(
             children: [
               ListTile(
                 title: Text(
                   homeworld.name,
                   style: kStyleLightGray,
                 ),
-                // Optionally, display more planet details like population, climate, etc.
                 // subtitle: Text(
                 //   "Population: ${homeworld.population}, Climate: ${homeworld.climate}",
                 //   style: kStyleVeryLightGray,
                 // ),
               ),
-              const ListDivider(), // Add a divider if it's part of a list
+              const ListDivider(),
             ],
           );
         } else {
