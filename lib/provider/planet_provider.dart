@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:starwars/models/planet.dart';
 import 'package:starwars/services/sw_api.dart';
 
@@ -21,7 +21,8 @@ class PlanetsProvider with ChangeNotifier {
 
     // var data = await SwApi().getDataPerson(url); // Old way
     try {
-      var data = await _swApi.getDataByFullUrl(url); // Changed to getDataByFullUrl
+      var data =
+          await _swApi.getDataByFullUrl(url); // Changed to getDataByFullUrl
       planet = planetFromJson(data);
       _planets.add(planet);
       notifyListeners();

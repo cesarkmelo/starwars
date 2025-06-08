@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:starwars/models/specie.dart';
 import 'package:starwars/services/sw_api.dart';
 
@@ -20,7 +20,8 @@ class SpeciesProvider with ChangeNotifier {
 
     // var data = await SwApi().getDataPerson(url); // Old way
     try {
-      var data = await _swApi.getDataByFullUrl(url); // Changed to getDataByFullUrl
+      var data =
+          await _swApi.getDataByFullUrl(url); // Changed to getDataByFullUrl
       Specie specie = specieFromJson(data);
       _species.add(specie);
       notifyListeners();
