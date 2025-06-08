@@ -23,10 +23,14 @@ class VehiclesList extends StatelessWidget { // Changed to StatelessWidget
         for (String url in vehicles) {
           // Find the vehicle in the provider's list
           // This relies on PersonDetailScreen having already called setVehicle for these URLs
-          final Vehicle? vehicle = vehicleProvider.vehicles.firstWhere(
-            (v) => v.url == url,
-            orElse: () => null, // Return null if not found
-          );
+          Vehicle? vehicle;
+          try {
+            vehicle = vehicleProvider.vehicles.firstWhere(
+              (v) => v.url == url,
+            );
+          } on StateError {
+            vehicle = null; // Element not found
+          }
 
           if (vehicle != null) {
             vehicleWidgets.add(
