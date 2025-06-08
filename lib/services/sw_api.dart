@@ -1,18 +1,24 @@
-import 'networking.dart';
+import 'networking.dart'; // NetworkHelper now throws HttpException
 
 const swApiUrl = 'https://swapi.dev/api';
 
 class SwApi {
-  Future<dynamic> getData(String filter, int page) async {
-    String swApiFilterUrl = '$swApiUrl/$filter?page=$page';
+  // Fetches data for a specific filter and page (e.g., a list of people)
+  Future<String> getData(String filter, int page) async {
+    String swApiFilterUrl = '$swApiUrl/$filter/?page=$page'; // Added trailing slash for consistency
     NetworkHelper networkHelper = NetworkHelper(swApiFilterUrl);
+    // NetworkHelper.getData() now returns Future<String> and can throw HttpException
     var resultsData = await networkHelper.getData();
     return resultsData;
   }
 
-  Future<dynamic> getDataPerson(String url) async {
+  // Fetches data from a complete URL (e.g., a specific person, planet, species, vehicle)
+  Future<String> getDataByFullUrl(String url) async {
     NetworkHelper networkHelper = NetworkHelper(url);
-    var resultsData = await networkHelper.getDataPerson();
+    // NetworkHelper.getData() now returns Future<String> and can throw HttpException
+    var resultsData = await networkHelper.getData();
     return resultsData;
   }
+
+  // getDataPerson method is removed.
 }
