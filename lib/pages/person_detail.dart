@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:starwars/components/appbar_main.dart';
+import 'package:starwars/components/homeworld_detail_view.dart';
 import 'package:starwars/components/list_divider.dart';
 import 'package:starwars/components/loading_error.dart';
 import 'package:starwars/components/loading_more.dart';
 import 'package:starwars/components/person_detail_list_tile.dart';
-import 'package:starwars/components/vehicles_list_tile.dart';
 import 'package:starwars/components/species_list.dart';
-import 'package:starwars/components/homeworld_detail_view.dart';
+import 'package:starwars/components/vehicles_list_tile.dart';
 import 'package:starwars/extensions/string_ext.dart';
 import 'package:starwars/models/payload_people.dart';
-import 'package:starwars/services/sw_api.dart'; // SwApi is updated
-import 'package:starwars/provider/vehicle_provider.dart';
-import 'package:starwars/provider/species_provider.dart';
 import 'package:starwars/provider/planet_provider.dart';
+import 'package:starwars/provider/species_provider.dart';
+import 'package:starwars/provider/vehicle_provider.dart';
+import 'package:starwars/services/sw_api.dart'; // SwApi is updated
+
 // Ensure HttpException is available if specific catch is needed, though not required here
 // import 'package:starwars/services/networking.dart';
-
 
 import '../constants.dart';
 
@@ -57,7 +57,8 @@ class _PersonDetailScreenState extends State<PersonDetailScreen> {
       final swApi = Provider.of<SwApi>(context, listen: false);
       // Use the new method: getDataByFullUrl
       final data = await swApi.getDataByFullUrl(_personUrl!);
-      final personData = personFromJson(data); // This function parses the string data
+      final personData =
+          personFromJson(data); // This function parses the string data
 
       setState(() {
         _person = personData;
@@ -65,8 +66,8 @@ class _PersonDetailScreenState extends State<PersonDetailScreen> {
       });
 
       _fetchRelatedData(personData);
-
-    } catch (e) { // This will catch HttpException as well
+    } catch (e) {
+      // This will catch HttpException as well
       setState(() {
         _error = e.toString(); // HttpException.toString() gives a good message
         _isLoading = false;
@@ -76,21 +77,24 @@ class _PersonDetailScreenState extends State<PersonDetailScreen> {
 
   void _fetchRelatedData(Person person) {
     if (person.vehicles.isNotEmpty) {
-      final vehicleProvider = Provider.of<VehicleProvider>(context, listen: false);
+      final vehicleProvider =
+          Provider.of<VehicleProvider>(context, listen: false);
       for (String url in person.vehicles) {
         vehicleProvider.setVehicle(url);
       }
     }
 
     if (person.species.isNotEmpty) {
-      final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
+      final speciesProvider =
+          Provider.of<SpeciesProvider>(context, listen: false);
       for (String url in person.species) {
         speciesProvider.setSpecie(url);
       }
     }
 
     if (person.homeworld.isNotEmpty) {
-      final planetProvider = Provider.of<PlanetsProvider>(context, listen: false);
+      final planetProvider =
+          Provider.of<PlanetsProvider>(context, listen: false);
       planetProvider.setPlanet(person.homeworld);
     }
   }
@@ -102,7 +106,11 @@ class _PersonDetailScreenState extends State<PersonDetailScreen> {
     if (_isLoading) {
       bodyContent = const LoadingMore();
     } else if (_error != null) {
-      bodyContent = LoadingError(message: _error, onRefresh: _fetchPersonDetails);
+      bodyContent = RefreshIndicator(
+          child: LoadingError(
+            message: _error,
+          ),
+          onRefresh: _fetchPersonDetails);
     } else if (_person != null) {
       bodyContent = PersonInfo(swPerson: _person!);
     } else {
@@ -151,17 +159,14 @@ class PersonInfo extends StatelessWidget {
             value: swPerson.birthYear,
           ),
           const ListDivider(),
-
           if (swPerson.homeworld.isNotEmpty) ...[
             _buildSectionTitle('Homeworld'),
             HomeworldDetailView(homeworldUrl: swPerson.homeworld),
           ],
-
           if (swPerson.species.isNotEmpty) ...[
             _buildSectionTitle('Species'),
             SpeciesList(speciesUrls: swPerson.species),
           ],
-
           if (swPerson.vehicles.isNotEmpty) ...[
             _buildSectionTitle('Vehicles'),
             VehiclesList(vehicles: swPerson.vehicles),

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:starwars/models/vehicle.dart';
 import 'package:starwars/services/sw_api.dart';
 
@@ -19,7 +19,8 @@ class VehicleProvider with ChangeNotifier {
     }
     // var data = await SwApi().getDataPerson(url); // Old way
     try {
-      var data = await _swApi.getDataByFullUrl(url); // Changed to getDataByFullUrl
+      var data =
+          await _swApi.getDataByFullUrl(url); // Changed to getDataByFullUrl
       Vehicle vehicle = vehicleFromJson(data);
       _vehicles.add(vehicle);
       notifyListeners();
